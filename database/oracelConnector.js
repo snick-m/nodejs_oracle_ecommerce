@@ -11,7 +11,8 @@ const oracelConnector = async () => {
         const connection = await oracledb.getConnection({
             user: USER,
             password: PASS,
-            connectString: `${HOST}:${PORT}/${DB}`
+            connectString: `${USER}@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${HOST}
+                )(Port=${PORT}))(CONNECT_DATA=(SID=${DB})))`
         });
         console.log('Connected to Oracle Database');
         return connection;
