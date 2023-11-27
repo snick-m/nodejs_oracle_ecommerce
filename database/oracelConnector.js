@@ -1,18 +1,21 @@
 import oracledb from 'oracledb';
 
-const USER = 'm277rahm';
-const PASS = process.env.ORACLE_PASS;
-const HOST = 'oracle.scs.ryerson.ca';
+const isTMU = process.env.ENV === 'tmu' ? true : false;
+
+const USER = isTMU ? 'm277rahm' : 'mushfiq';
+const PASS = isTMU ? process.env.ORACLE_TMU_PASS : process.env.ORACLE_PASS;
+const HOST = '192.168.2.241';
 const PORT = 1521;
-const DB = 'orcl';
+const DB = 'XEPDB1';
 
 const oracelConnector = async () => {
     try {
         const connection = await oracledb.getConnection({
             user: USER,
             password: PASS,
-            connectString: `${USER}@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=${HOST}
-                )(Port=${PORT}))(CONNECT_DATA=(SID=${DB})))`
+            connectString: isTMU ?
+                `(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=oracle12c.scs.ryerson.ca)(Port=1521))(CONNECT_DATA=(SID=orcl12c)))` :
+                `${HOST}:${PORT}/${DB}`
         });
         console.log('Connected to Oracle Database');
         return connection;
